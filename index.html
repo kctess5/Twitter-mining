@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/socket.io/socket.io.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.js"></script>
+
+<style>
+
+  html { height: 100% }
+  body { height: 100%; margin: 0px; padding: 0px }
+  #container { width: 100%; height: 100% }
+  #nav { z-index: 100; position: absolute; margin: 10px 0px 0px 200px; background-color: #fff; border: 1px #000 Solid; padding: 5px; }
+  #map { width: 100%; height: 100% }
+
+</style>
+
+<script src="http://maps.google.com/maps/api/js?sensor=false&libraries=places" type="text/javascript"></script>
+
+<script>
+
+function initialize() {
+
+    var socket = io.connect('http://localhost:8080');
+
+    var styles = [
+        {
+            featureType: 'landscape',
+            elementType: 'all',
+            stylers: [
+                { hue: '#1188aa' },
+                { saturation: 75 },
+                { lightness: -59 },
+                { visibility: 'simplified' }
+            ]
+        },{
+            featureType: 'water',
+            elementType: 'all',
+            stylers: [
+                { hue: '#222222' },
+                { saturation: -100 },
+                { lightness: -82 },
+                { visibility: 'on' }
+            ]
+        },{
+            featureType: 'road',
+            elementType: 'all',
+            stylers: [
+                { hue: '#000000' },
+                { saturation: -100 },
+                { lightness: -100 },
+                { visibility: 'off' }
+            ]
+        },{
+            featureType: 'poi',
+            elementType: 'all',
+            stylers: [
+                { hue: '#000000' },
+                { saturation: -100 },
+                { lightness: -100 },
+                { visibility: 'off' }
+            ]
+        },{
+            featureType: 'transit',
+            elementType: 'all',
+            stylers: [
+                { hue: '#000000' },
+                { saturation: 0 },
+                { lightness: -100 },
+                { visibility: 'off' }
+            ]
+        },{
+            featureType: 'administrative',
+            elementType: 'geometry',
+            stylers: [
+                { hue: '#000000' },
+                { saturation: 0 },
+                { lightness: -100 },
+                { visibility: 'off' }
+            ]
+        },{
+            featureType: 'administrative.locality',
+            elementType: 'all',
+            stylers: [
+                { hue: '#000000' },
+                { saturation: 0 },
+                { lightness: 0 },
+                { visibility: 'off' }
+            ]
+        }
+    ];
+
+
+
+    var mapOptions = {
+        center: new google.maps.LatLng(20, 0),
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        zoom: 2
+    }; 
+
+    var mapOptions = {
+        mapTypeControlOptions: {
+            mapTypeIds: [ 'Styled']
+        },
+        center: new google.maps.LatLng(20,0),
+        zoom: 2,
+        mapTypeId: 'Styled'
+    };
+
+    var mapDiv = document.getElementById('map');
+
+
+    window.map = new google.maps.Map(mapDiv, mapOptions);
+    var styledMapType = new google.maps.StyledMapType(styles, { name: 'Styled' });
+    window.map.mapTypes.set('Styled', styledMapType);
+
+    google.maps.event.addListener(map, 'bounds_changed', function() {
+        var bounds = window.map.getBounds();
+        console.log("emitting bounds", bounds)
+        // console.log(bounds.ba.b, bounds.ba.d);
+        // console.log(bounds.fa.b, bounds.fa.d);
+        socket.emit('viewresize', { lat: {min:bounds.fa.b,max:bounds.fa.d}, lon: {min:bounds.ba.d,max:bounds.ba.b}  });
+      });
+
+
+    
+    socket.on('stream', function(tweet){
+
+        var myLatlng = new google.maps.LatLng(tweet[1],tweet[0]);
+        var marker = new google.maps.Marker({
+            position: myLatlng
+        });
+
+        marker.setMap(map);
+
+    });
+
+};
+</script>
+
+</head>
+
+<body onload="initialize();">
+
+<div id="container">
+    <div id="map"></div>
+</div>
+
+
+</body>
+</html>
