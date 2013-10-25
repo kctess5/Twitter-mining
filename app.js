@@ -36,7 +36,7 @@ io.sockets.on('connection', function (socket) {
 	stream.on('tweet', function (tweet) {
 		if (tweet.coordinates != null){
 			// io.sockets.emit('stream',tweet.text);
-			io.sockets.emit('stream',tweet.coordinates.coordinates);
+			io.sockets.emit('stream',{"coordinates":tweet.coordinates.coordinates,"text":tweet.text});
 		}
   });
 
