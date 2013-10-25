@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="/socket.io/socket.io.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="http://xregexp.com/xregexp-all.js"></script>
+<!-- <script src="addons/unicode/unicode-base.js"></script> -->
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.js"></script>
 
 <style>
@@ -18,15 +21,16 @@
 <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/maplabel/src/maplabel-compiled.js"></script>
 
 <script>
+// var XRegExp = require('xregexp').XRegExp;
 
 function initialize() {
 
     var counter = 0;
-    var markers = 50;
+    var markers = 15;
     window.marker = [];
     window.tweets = [];
 
-    var commonWords = ["the","of","and","a","to","in","is","you","that","it","he","was","for","on","are","as","with","his","they","i","at","be","this","have","from","or","one","had","by","word","but","not","what","all","were","we","when","your","can","said","there","use","an","each","which","she","do","how","their","if","will","up","other","about","out","many","then","them","these","so","some","her","would","make","like","him","into","time","has","look","two","more","write","go","see","number","no","way","could","people","my","than","first","water","been","call","who","oil","its","now","find","long","down","day","did","get","come","made","may","part","im","me","[pic]", "", "que","de","no","a","la","el","es","y","en","lo","un","por","qué","me","una","te","los","se","con","para","mi","está","si","bien","pero","yo","eso","las","sí","su","tu","aquí","del","al","como","le","más","esto","ya","todo","esta","vamos","muy","rt","ka"];
+    var commonWords = ["the","of","and","a","to","in","is","you","that","it","he","was","for","on","are","as","with","his","they","i","at","be","this","have","from","or","one","had","by","word","but","not","what","all","were","we","when","your","can","said","there","use","an","each","which","she","do","how","their","if","will","up","other","about","out","many","then","them","these","so","some","her","would","make","like","him","into","time","has","look","two","more","write","go","see","number","no","way","could","my","than","first","been","call","who","oil","its","now","find","long","down","day","did","get","come","made","may","part","im","me", "que","de","no","a","la","el","es","y","en","lo","un","por","qué","me","una","te","los","se","con","para","mi","está","si","bien","pero","yo","eso","las","sí","su","tu","aquí","del","al","como","le","más","esto","ya","todo","esta","vamos","muy","rt","ka", "pic", "aku", "just", "others", "les", "apa"];
 
     var socket = io.connect();
 
@@ -119,42 +123,47 @@ function initialize() {
 
     socket.on('stream', function(tweet){
 
-        var myLatlng = new google.maps.LatLng(tweet.coordinates[1],tweet.coordinates[0]);
-        window.tweets[counter%markers] = tweet.text;
+        window.tweets[counter%markers] = tweet;
         // console.log(counter%markers);
         // console.log(window.tweets[counter%markers]);
 
         var wordArray = [];
 
         for(var i = 0; i < window.tweets.length; i++){
-          var words = cleanString( window.tweets[i] ).split(" ");
+          var words = cleanString( window.tweets[i].text );
           wordArray = wordArray.concat( cleanWords(words) );
         }
-        console.log(mode(wordArray));
+        var modeWord = mode(wordArray);
+        // console.log(mode(wordArray));
+        var averageCoordinate = averageCoordinates(window.tweets);
+        // console.log(averageCoordinates(window.tweets))
         // console.log(wordArray);
         // console.log(tweet.text);
 
+        var myLatlng = new google.maps.LatLng(averageCoordinate.y,averageCoordinate.x);
+        if (window.mapLabel) {
+            mapLabel.set('text', modeWord);
+            mapLabel.set('position', myLatlng);
+          } else {
+            window.mapLabel = new MapLabel({
+              text: modeWord,
+              position: myLatlng,
+              map: map,
+              fontSize: 30,
+              strokeWeight:0,
+              fontColor:'ffffff',
+              align: 'right'
+            });
 
-        // var marker = new google.maps.Marker({
-        //     position: myLatlng
-        // });
+            window.mapLabel.set('position', myLatlng);
 
-        // marker.setMap(map);
+            // window.marker[counter%markers].setMap(map);
+          }
 
-        // console.log(map.getZoom());
-        // var mapLabel = new MapLabel({
-        //    text: 'Test',
-        //    position: myLatlng,
-        //    map: map,
-        //    fontSize: 12,
-        //    strokeWeight:0,
-        //    fontColor:'ffffff',
-        //    align: 'right'
-        //  });
+          myLatlng = new google.maps.LatLng(tweet.coordinates[1],tweet.coordinates[0]);
 
-        // mapLabel.set('position', myLatlng);
+          
 
-        // function placeMarker(location) {
           if (window.marker[counter%markers]) {
             //if marker already was created change positon
             window.marker[counter%markers].setPosition(myLatlng);
@@ -166,8 +175,11 @@ function initialize() {
 
             window.marker[counter%markers].setMap(map);
           }
+
+
+
           counter += 1;
-        // }
+        
 
     });
 
@@ -195,14 +207,15 @@ function mode(array)
 }
 
 function cleanString(string){
-  // string = String(string).toLowerCase();
-  // var string = string.replace(/[^\w\s]/gi, '').replace( /[\s\n\r]+/g, ' ' );
+  var returnArray = [];
+  var regex = XRegExp("[^\\s\\p{Latin}]+", "g");
+  var string = XRegExp.replace(string, regex, "").toLowerCase().split( /[\s\n\r]+/g );
 
-  // var regex = XRegExp("[^\\s\\p{Latin}]+", "g");
-  // // var str = "¿Me puedes decir la contraseña de la Wi-Fi?"
-  // var string = XRegExp.replace(string, regex, "");
+  for(var i = 0; i < string.length; i++){ 
+    if (string[i].length > 2) returnArray.push(string[i]);
+  }
 
-  return string;
+  return returnArray;
 }
 
 function cleanWords(array){
@@ -210,6 +223,19 @@ function cleanWords(array){
     array = array.clean(commonWords[i]);
   }
   return array;
+}
+
+function averageCoordinates(object){
+  var x = 0;
+  var y = 0;
+  for(var i = 0; i < object.length; i++){
+    x += object[i].coordinates[0];
+    y += object[i].coordinates[1];
+  }
+  // console.log(x / object.length, y / object.length);
+  x = x / object.length;
+  y = y / object.length
+  return {"x": x, "y": y}
 }
 
 Array.prototype.clean = function(deleteValue) {

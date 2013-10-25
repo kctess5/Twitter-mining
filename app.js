@@ -5,6 +5,8 @@ var express = require('express')
   ,	Twit = require('twit')
   , io = require('socket.io').listen(server);
 
+// var XRegExp = require('xregexp').XRegExp;
+
 // server.listen(8080);
 server.listen(process.env.PORT || 5000)
 
@@ -12,6 +14,14 @@ server.listen(process.env.PORT || 5000)
 app.get('/', function (req, res) {
 	res.sendfile(__dirname + '/index.html');
 });
+
+// app.get('/xregexp-all.js', function (req, res) {
+// 	res.sendfile(__dirname + '/xregexp/xregexp-all.js');
+// });
+
+// case '/xregexp-all.js':
+//   fs.createReadStream(__dirname).pipe(res);
+//   break;
 
 var T = new Twit({
     consumer_key:         'cmr5Kcr2KaLgz1IntDSDQ'
