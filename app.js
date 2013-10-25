@@ -1,13 +1,10 @@
 var express = require('express')
-  , app = express()
-  , http = require('http')
-  , server = http.createServer(app)
-  ,	Twit = require('twit')
-  , io = require('socket.io').listen(server);
+	, app = express()
+	, http = require('http')
+	, server = http.createServer(app)
+	,	Twit = require('twit')
+	, io = require('socket.io').listen(server);
 
-// var XRegExp = require('xregexp').XRegExp;
-
-// server.listen(8080);
 server.listen(process.env.PORT || 5000)
 
 // routing
@@ -15,19 +12,12 @@ app.get('/', function (req, res) {
 	res.sendfile(__dirname + '/index.html');
 });
 
-// app.get('/xregexp-all.js', function (req, res) {
-// 	res.sendfile(__dirname + '/xregexp/xregexp-all.js');
-// });
-
-// case '/xregexp-all.js':
-//   fs.createReadStream(__dirname).pipe(res);
-//   break;
 
 var T = new Twit({
-    consumer_key:         'cmr5Kcr2KaLgz1IntDSDQ'
-  , consumer_secret:      '1aNgD7Xn7NClsQuYLL2S8g5z113e6IPVpcPUcvFBiRw'
-  , access_token:         '1029729847-B1Dzt6ztu0LmEHhoYzvMTqnyAzRdabP7hru6Cfr'
-  , access_token_secret:  'FZrrvgI3RJYlA8CWQIvGBAWrjf9XQug3tNJaHHsoe4'
+	  consumer_key:         'cmr5Kcr2KaLgz1IntDSDQ'
+	, consumer_secret:      '1aNgD7Xn7NClsQuYLL2S8g5z113e6IPVpcPUcvFBiRw'
+	, access_token:         '1029729847-B1Dzt6ztu0LmEHhoYzvMTqnyAzRdabP7hru6Cfr'
+	, access_token_secret:  'FZrrvgI3RJYlA8CWQIvGBAWrjf9XQug3tNJaHHsoe4'
 });
 
 io.sockets.on('connection', function (socket) {
@@ -40,15 +30,13 @@ io.sockets.on('connection', function (socket) {
 	var mit = ['-71.10781','42.35360', '-71.07837', '42.36400']
 	var stream = T.stream('statuses/filter', { locations: world })
 
-	// var watchList = ['love', 'hate'];
-	// var stream = T.stream('statuses/filter', { track: watchList })
+	// var watchList = ['love', 'hate']; var stream = T.stream('statuses/filter', { track: watchList })
 
 	stream.on('tweet', function (tweet) {
 		if (tweet.coordinates != null){
-			// io.sockets.emit('stream',tweet.text);
 			io.sockets.emit('stream',{"coordinates":tweet.coordinates.coordinates,"text":tweet.text});
 		}
-  });
+	});
 
  });
 

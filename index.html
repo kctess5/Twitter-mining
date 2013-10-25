@@ -3,17 +3,15 @@
 <head>
 <script src="/socket.io/socket.io.js"></script>
 <script src="http://xregexp.com/xregexp-all.js"></script>
-<!-- <script src="addons/unicode/unicode-base.js"></script> -->
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.js"></script>
 
 <style>
 
-  html { height: 100% }
-  body { height: 100%; margin: 0px; padding: 0px }
-  #container { width: 100%; height: 100% }
-  #nav { z-index: 100; position: absolute; margin: 10px 0px 0px 200px; background-color: #fff; border: 1px #000 Solid; padding: 5px; }
-  #map { width: 100%; height: 100% }
+	html { height: 100% }
+	body { height: 100%; margin: 0px; padding: 0px }
+	#container { width: 100%; height: 100% }
+	#nav { z-index: 100; position: absolute; margin: 10px 0px 0px 200px; background-color: #fff; border: 1px #000 Solid; padding: 5px; }
+	#map { width: 100%; height: 100% }
 
 </style>
 
@@ -21,244 +19,199 @@
 <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/maplabel/src/maplabel-compiled.js"></script>
 
 <script>
-// var XRegExp = require('xregexp').XRegExp;
 
 function initialize() {
 
-    var counter = 0;
-    var markers = 15;
-    window.marker = [];
-    window.tweets = [];
+	var counter = 0;
+	var iterations = 15;
+	window.marker = [];
+	window.tweets = [];
+	window.words = [];
+	var wordCounter = 0;
+	var displayWords = 10;
 
-    var commonWords = ["the","of","and","a","to","in","is","you","that","it","he","was","for","on","are","as","with","his","they","i","at","be","this","have","from","or","one","had","by","word","but","not","what","all","were","we","when","your","can","said","there","use","an","each","which","she","do","how","their","if","will","up","other","about","out","many","then","them","these","so","some","her","would","make","like","him","into","time","has","look","two","more","write","go","see","number","no","way","could","my","than","first","been","call","who","oil","its","now","find","long","down","day","did","get","come","made","may","part","im","me", "que","de","no","a","la","el","es","y","en","lo","un","por","qué","me","una","te","los","se","con","para","mi","está","si","bien","pero","yo","eso","las","sí","su","tu","aquí","del","al","como","le","más","esto","ya","todo","esta","vamos","muy","rt","ka", "pic", "aku", "just", "others", "les", "apa"];
 
-    var socket = io.connect();
+	var commonWords = ["the","of","and","a","to","in","is","you","that","it","he","was","for","on","are","as","with","his","they","i","at","be","this","have","from","or","one","had","by","word","but","not","what","all","were","we","when","your","can","said","there","use","an","each","which","she","do","how","their","if","will","up","other","about","out","many","then","them","these","so","some","her","would","make","like","him","into","time","has","look","two","more","write","go","see","number","no","way","could","my","than","first","been","call","who","oil","its","now","find","long","down","day","did","get","come","made","may","part","im","me", "que","de","no","a","la","el","es","y","en","lo","un","por","qué","me","una","te","los","se","con","para","mi","está","si","bien","pero","yo","eso","las","sí","su","tu","aquí","del","al","como","le","más","esto","ya","todo","esta","vamos","muy","rt","ka", "pic", "aku", "just", "others", "les", "apa"];
 
-    var styles = [
-        {
-            featureType: 'landscape',
-            elementType: 'all',
-            stylers: [
-                { hue: '#1188aa' },
-                { saturation: 75 },
-                { lightness: -59 },
-                { visibility: 'simplified' }
-            ]
-        },{
-            featureType: 'water',
-            elementType: 'all',
-            stylers: [
-                { hue: '#222222' },
-                { saturation: -100 },
-                { lightness: -82 },
-                { visibility: 'on' }
-            ]
-        },{
-            featureType: 'road',
-            elementType: 'all',
-            stylers: [
-                { hue: '#000000' },
-                { saturation: -100 },
-                { lightness: -100 },
-                { visibility: 'off' }
-            ]
-        },{
-            featureType: 'poi',
-            elementType: 'all',
-            stylers: [
-                { hue: '#000000' },
-                { saturation: -100 },
-                { lightness: -100 },
-                { visibility: 'off' }
-            ]
-        },{
-            featureType: 'transit',
-            elementType: 'all',
-            stylers: [
-                { hue: '#000000' },
-                { saturation: 0 },
-                { lightness: -100 },
-                { visibility: 'off' }
-            ]
-        },{
-            featureType: 'administrative',
-            elementType: 'geometry',
-            stylers: [
-                { hue: '#000000' },
-                { saturation: 0 },
-                { lightness: -100 },
-                { visibility: 'off' }
-            ]
-        },{
-            featureType: 'administrative.locality',
-            elementType: 'all',
-            stylers: [
-                { hue: '#000000' },
-                { saturation: 0 },
-                { lightness: 0 },
-                { visibility: 'off' }
-            ]
+	var socket = io.connect();
+
+	///................... Initalize Map ...................///
+
+	var styles = [
+		{featureType: 'landscape',elementType: 'all',stylers: [{ hue: '#1188aa' },{ saturation: 75 },{ lightness: -59 },{ visibility: 'simplified' }]
+		},{featureType: 'water',elementType: 'all',stylers: [{ hue: '#222222' },{ saturation: -100 },{ lightness: -82 },{ visibility: 'on' }]
+		},{featureType: 'road',elementType: 'all',stylers: [{ hue: '#000000' },{ saturation: -100 },{ lightness: -100 },{ visibility: 'off' }]
+		},{featureType: 'poi',elementType: 'all',stylers: [{ hue: '#000000' },{ saturation: -100 },{ lightness: -100 },{ visibility: 'off' }]
+		},{featureType: 'transit',elementType: 'all',stylers: [{ hue: '#000000' },{ saturation: 0 },{ lightness: -100 },{ visibility: 'off' }]
+		},{featureType: 'administrative',elementType: 'geometry',stylers: [{ hue: '#000000' },{ saturation: 0 },{ lightness: -100 },{ visibility: 'off' }]
+		},{featureType: 'administrative.locality',elementType: 'all',stylers: [{ hue: '#000000' },{ saturation: 0 },{ lightness: 0 },{ visibility: 'off' }]}
+	];
+
+	var mapOptions = {
+		mapTypeControlOptions: {
+			mapTypeIds: [ 'Styled']
+		},
+		center: new google.maps.LatLng(20,0),
+		zoom: 2,
+		mapTypeId: 'Styled'
+	};
+
+	var mapDiv = document.getElementById('map');
+
+	window.map = new google.maps.Map(mapDiv, mapOptions);
+	var styledMapType = new google.maps.StyledMapType(styles, { name: 'Styled' });
+	window.map.mapTypes.set('Styled', styledMapType);
+
+	var myLatlng = new google.maps.LatLng(0,0);
+	if (window.mapLabel) {
+		mapLabel.set('text', modeWord);
+		mapLabel.set('position', myLatlng);
+	} else {
+		window.mapLabel = new MapLabel({text: "Initalizing...",position: myLatlng,map: map,fontSize: 30,strokeWeight:0,fontColor:'ffffff',align: 'middle'});
+		window.mapLabel.set('position', myLatlng);
+	}
+
+	// google.maps.event.addListener(map, 'bounds_changed', function() {var bounds = window.map.getBounds();socket.emit('viewresize', { lat: {min:bounds.fa.b,max:bounds.fa.d}, lon: {min:bounds.ba.d,max:bounds.ba.b}  });});
+
+	///////////////////////////////////////////////////////////
+
+
+	///.................. Initalize Socket ..................///
+
+	socket.on('stream', function(tweet){
+
+		window.tweets[counter%iterations] = tweet;
+
+		var wordArray = [];
+
+		for(var i = 0; i < window.tweets.length; i++){
+			var words = cleanString( window.tweets[i].text );
+			wordArray = wordArray.concat( cleanWords(words) );
         }
-    ];
+		var modeWord = mode(wordArray);
+		var averageCoordinate = averageCoordinates(window.tweets);
+		// console.log(averageCoordinates(window.tweets))
+		// console.log(wordArray);
 
-    var mapOptions = {
-        mapTypeControlOptions: {
-            mapTypeIds: [ 'Styled']
-        },
-        center: new google.maps.LatLng(20,0),
-        zoom: 2,
-        mapTypeId: 'Styled'
-    };
 
-    var mapDiv = document.getElementById('map');
+	///................ Initalize Common Words ................///
 
-    window.map = new google.maps.Map(mapDiv, mapOptions);
-    var styledMapType = new google.maps.StyledMapType(styles, { name: 'Styled' });
-    window.map.mapTypes.set('Styled', styledMapType);
+		var myLatlng = new google.maps.LatLng(averageCoordinate.y,averageCoordinate.x);
+		if (window.mapLabel) {
+			mapLabel.set('text', modeWord);
+			mapLabel.set('position', myLatlng);
+		} else {
+			window.mapLabel = new MapLabel({
+				text: modeWord,
+				position: myLatlng,
+				map: map,
+				fontSize: 30,
+				strokeWeight:0,
+				fontColor:'ffffff',
+				align: 'middle'
+			});
 
-    google.maps.event.addListener(map, 'bounds_changed', function() {
-        var bounds = window.map.getBounds();
-        socket.emit('viewresize', { lat: {min:bounds.fa.b,max:bounds.fa.d}, lon: {min:bounds.ba.d,max:bounds.ba.b}  });
-      });
-
-    socket.on('stream', function(tweet){
-
-        window.tweets[counter%markers] = tweet;
-        // console.log(counter%markers);
-        // console.log(window.tweets[counter%markers]);
-
-        var wordArray = [];
-
-        for(var i = 0; i < window.tweets.length; i++){
-          var words = cleanString( window.tweets[i].text );
-          wordArray = wordArray.concat( cleanWords(words) );
-        }
-        var modeWord = mode(wordArray);
-        // console.log(mode(wordArray));
-        var averageCoordinate = averageCoordinates(window.tweets);
-        // console.log(averageCoordinates(window.tweets))
-        // console.log(wordArray);
-        // console.log(tweet.text);
-
-        var myLatlng = new google.maps.LatLng(averageCoordinate.y,averageCoordinate.x);
-        if (window.mapLabel) {
-            mapLabel.set('text', modeWord);
-            mapLabel.set('position', myLatlng);
-          } else {
-            window.mapLabel = new MapLabel({
-              text: modeWord,
-              position: myLatlng,
-              map: map,
-              fontSize: 30,
-              strokeWeight:0,
-              fontColor:'ffffff',
-              align: 'right'
-            });
-
-            window.mapLabel.set('position', myLatlng);
-
-            // window.marker[counter%markers].setMap(map);
-          }
-
-          myLatlng = new google.maps.LatLng(tweet.coordinates[1],tweet.coordinates[0]);
-
+			window.mapLabel.set('position', myLatlng);
+		}
           
+	///.................. Initalize Markers ..................///
 
-          if (window.marker[counter%markers]) {
-            //if marker already was created change positon
-            window.marker[counter%markers].setPosition(myLatlng);
-          } else {
-            //create a marker
-            window.marker[counter%markers] = new google.maps.Marker({
-                position: myLatlng
-            });
+		myLatlng = new google.maps.LatLng(tweet.coordinates[1],tweet.coordinates[0]);
 
-            window.marker[counter%markers].setMap(map);
-          }
+		if (window.marker[counter%iterations]) {
+		//if marker already was created change positon
+			window.marker[counter%iterations].setPosition(myLatlng);
+		} else {
+			//create a marker
+			window.marker[counter%iterations] = new google.maps.Marker({
+				position: myLatlng
+			});
 
+			window.marker[counter%iterations].setMap(map);
+		}
+		counter += 1;
+	});
 
+	///................ Initalize Common Words ................///
 
-          counter += 1;
-        
+	function mode(array){
+		if(array.length == 0)
+			return null;
+		var modeMap = {};
+		var maxEl = array[0], maxCount = 1;
+		for(var i = 0; i < array.length; i++){
+			var el = array[i];
+			if(modeMap[el] == null) modeMap[el] = 1;
+		else
+			modeMap[el]++;  
+			if(modeMap[el] > maxCount){
+				maxEl = el;
+				maxCount = modeMap[el];
+			}
+		}
+		return maxEl;
+	}
 
-    });
+	///............... Strip Bad Characters ...............///
 
+	function cleanString(string){
+		var returnArray = [];
+		var regex = XRegExp("[^\\s\\p{Latin}]+", "g");
+		var string = XRegExp.replace(string, regex, "").toLowerCase().split( /[\s\n\r]+/g );
 
-function mode(array)
-{
-    if(array.length == 0)
-      return null;
-    var modeMap = {};
-    var maxEl = array[0], maxCount = 1;
-    for(var i = 0; i < array.length; i++)
-    {
-      var el = array[i];
-      if(modeMap[el] == null)
-        modeMap[el] = 1;
-      else
-        modeMap[el]++;  
-      if(modeMap[el] > maxCount)
-      {
-        maxEl = el;
-        maxCount = modeMap[el];
-      }
-    }
-    return maxEl;
-}
+		for(var i = 0; i < string.length; i++){ 
+			if (string[i].length > 2) returnArray.push(string[i]);
+		}
+		return returnArray;
+	}
 
-function cleanString(string){
-  var returnArray = [];
-  var regex = XRegExp("[^\\s\\p{Latin}]+", "g");
-  var string = XRegExp.replace(string, regex, "").toLowerCase().split( /[\s\n\r]+/g );
+	///................ Remove Common Words ................///
 
-  for(var i = 0; i < string.length; i++){ 
-    if (string[i].length > 2) returnArray.push(string[i]);
-  }
+	function cleanWords(array){
+		for(var i = 0; i < commonWords.length; i++){ 
+			array = array.clean(commonWords[i]);
+		}
+		return array;
+	}
 
-  return returnArray;
-}
+	///................ Return Average Coordinate ................///
 
-function cleanWords(array){
-  for(var i = 0; i < commonWords.length; i++){ 
-    array = array.clean(commonWords[i]);
-  }
-  return array;
-}
+	function averageCoordinates(object){
+		var x = 0;
+		var y = 0;
+		for(var i = 0; i < object.length; i++){
+			x += object[i].coordinates[0];
+			y += object[i].coordinates[1];
+		}
+		// console.log(x / object.length, y / object.length);
+		x = x / object.length;
+		y = y / object.length
+		return {"x": x, "y": y}
+	}
 
-function averageCoordinates(object){
-  var x = 0;
-  var y = 0;
-  for(var i = 0; i < object.length; i++){
-    x += object[i].coordinates[0];
-    y += object[i].coordinates[1];
-  }
-  // console.log(x / object.length, y / object.length);
-  x = x / object.length;
-  y = y / object.length
-  return {"x": x, "y": y}
-}
+	///................ Remove Value From Array ................///
 
-Array.prototype.clean = function(deleteValue) {
-  for (var i = 0; i < this.length; i++) {
-    if (this[i] == deleteValue) {         
-      this.splice(i, 1);
-      i--;
-    }
-  }
-  return this;
+	Array.prototype.clean = function(deleteValue) {
+		for (var i = 0; i < this.length; i++) {
+			if (this[i] == deleteValue) {         
+				this.splice(i, 1);
+				i--;
+			}
+		}
+		return this;
+	};
 };
 
-};
 </script>
 
 </head>
+	<body onload="initialize();">
 
-<body onload="initialize();">
+		<div id="container">
+			<div id="map"></div>
+		</div>
 
-<div id="container">
-    <div id="map"></div>
-</div>
-
-
-</body>
+	</body>
 </html>
+
+
