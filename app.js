@@ -5,7 +5,8 @@ var express = require('express')
   ,	Twit = require('twit')
   , io = require('socket.io').listen(server);
 
-server.listen(8080);
+// server.listen(8080);
+.listen(process.env.PORT || 5000)
 
 // routing
 app.get('/', function (req, res) {
