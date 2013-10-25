@@ -36,7 +36,7 @@
 function initialize() {
 
 	var counter = 0;
-	var iterations = 15;
+	var iterations = 50;
 	window.marker = [];
 	window.tweets = [];
 	window.words = [];
@@ -175,19 +175,19 @@ function initialize() {
           
 	///.................. Initalize Markers ..................///
 
-		myLatlng = new google.maps.LatLng(tweet.coordinates[1],tweet.coordinates[0]);
+		// myLatlng = new google.maps.LatLng(tweet.coordinates[1],tweet.coordinates[0]);
 
-		if (window.marker[counter%iterations]) {
-		//if marker already was created change positon
-			window.marker[counter%iterations].setPosition(myLatlng);
-		} else {
-			//create a marker
-			window.marker[counter%iterations] = new google.maps.Marker({
-				position: myLatlng
-			});
+		// if (window.marker[counter%iterations]) {
+		// //if marker already was created change positon
+		// 	window.marker[counter%iterations].setPosition(myLatlng);
+		// } else {
+		// 	//create a marker
+		// 	window.marker[counter%iterations] = new google.maps.Marker({
+		// 		position: myLatlng
+		// 	});
 
-			window.marker[counter%iterations].setMap(map);
-		}
+		// 	window.marker[counter%iterations].setMap(map);
+		// }
 		counter += 1;
 	});
 
