@@ -2,7 +2,8 @@ var express = require('express')
 	, app = express()
 	, http = require('http')
 	, server = http.createServer(app)
-	,	Twit = require('twit')
+	, XRegExp = require('xregexp').XRegExp
+	, Twit = require('twit')
 	, io = require('socket.io').listen(server);
 
 server.listen(process.env.PORT || 5000)
@@ -34,9 +35,48 @@ io.sockets.on('connection', function (socket) {
 
 	stream.on('tweet', function (tweet) {
 		if (tweet.coordinates != null){
-			io.sockets.emit('stream',{"coordinates":tweet.coordinates.coordinates,"text":tweet.text});
+			var tweetText = cleanString(tweet.text);
+			tweetText = cleanWords(tweetText);
+			// console.log(tweetText);
+			io.sockets.emit('stream',{"coordinates":tweet.coordinates.coordinates,"text":tweetText});
 		}
 	});
 
  });
+
+///............... Strip Bad Characters ...............///
+
+function cleanString(string){
+	var returnArray = [];
+	var regex = XRegExp("[^\\s\\p{Latin}]+", "g");
+	var string = XRegExp.replace(string, regex, "").toLowerCase().split( /[\s\n\r]+/g );
+
+	for(var i = 0; i < string.length; i++){ 
+		if (string[i].length > 2) returnArray.push(string[i]);
+	}
+	return returnArray;
+}
+
+///................ Remove Common Words ................///
+
+var commonWords = ["the","of","and","a","to","in","is","you","that","it","he","was","for","on","are","as","with","his","they","i","at","be","this","have","from","or","one","had","by","word","but","not","what","all","were","we","when","your","can","said","there","use","an","each","which","she","do","how","their","if","will","up","other","about","out","many","then","them","these","so","some","her","would","make","like","him","into","time","has","look","two","more","write","go","see","number","no","way","could","my","than","first","been","call","who","oil","its","now","find","long","down","day","did","get","come","made","may","part","im","me", "que","de","no","a","la","el","es","y","en","lo","un","por","qué","me","una","te","los","se","con","para","mi","está","si","bien","pero","yo","eso","las","sí","su","tu","aquí","del","al","como","le","más","esto","ya","todo","esta","vamos","muy","rt","ka", "pic", "aku", "just", "others", "les", "apa"];
+
+function cleanWords(array){
+	for(var i = 0; i < commonWords.length; i++){ 
+		array = array.clean(commonWords[i]);
+	}
+	return array;
+}
+
+///................ Remove Value From Array ................///
+
+Array.prototype.clean = function(deleteValue) {
+	for (var i = 0; i < this.length; i++) {
+		if (this[i] == deleteValue) {         
+			this.splice(i, 1);
+			i--;
+		}
+	}
+	return this;
+};
 
