@@ -56,8 +56,8 @@ io.sockets.on('connection', function (socket) {
 
 function cleanString(string){
 	var returnArray = [];
-	// var regex = XRegExp("[^\\s\\p{Latin}]+", "g");
-	var regex = XRegExp("[^\\s\\p{N}\\p{L}-]+", "g");
+	var regex = XRegExp("[^\\s\\p{Latin}]+", "g");
+	// var regex = XRegExp("[^\\s\\p{N}\\p{L}-]+", "g");
 	var string = XRegExp.replace(string, regex, "").toLowerCase().split( /[\s\n\r]+/g );
 
 	for(var i = 0; i < string.length; i++){ 
