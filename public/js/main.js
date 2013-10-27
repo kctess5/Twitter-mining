@@ -85,7 +85,7 @@ function initialize() {
 			//if marker already was created change positon
 				window.words[wordCounter%displayWords].set('text', window.modeWord);
 				window.words[wordCounter%displayWords].set('position', myLatlng);
-				window.words[wordCounter%displayWords].set('fontSize', 30);
+				window.words[wordCounter%displayWords].set('fontSize', 40);
 				shrinkText( window.words[wordCounter%displayWords] );
 
 				// setTimeout(function(){ 
