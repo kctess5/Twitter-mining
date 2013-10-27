@@ -7,11 +7,11 @@ var express = require('express')
 	, io = require('socket.io').listen(server, { log: false });
 	// require('socket.io').listen(app, { log: false });
 
-server.listen(process.env.PORT || 5000)
+server.listen(process.env.PORT || 5000) 
 
 // routing
 app.get('/', function (req, res) {
-	res.sendfile(__dirname + '/index.html');
+	res.sendfile(__dirname + '/public/index.html');
 });
 
 
@@ -38,7 +38,8 @@ io.sockets.on('connection', function (socket) {
 	var mit = ['-71.10781','42.35360', '-71.07837', '42.36400']
 	var stream = T.stream('statuses/filter', { locations: world })
 
-	// var watchList = ['love', 'hate']; var stream = T.stream('statuses/filter', { track: watchList })
+	// var watchList = ['love', 'hate']; 
+	// var stream = T.stream('statuses/filter', { track: watchList })
 
 	stream.on('tweet', function (tweet) {
 		if (tweet.coordinates != null){
