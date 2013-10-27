@@ -4,7 +4,8 @@ var express = require('express')
 	, server = http.createServer(app)
 	, XRegExp = require('xregexp').XRegExp
 	, Twit = require('twit')
-	, io = require('socket.io').listen(server);
+	, io = require('socket.io').listen(server, { log: false });
+	// require('socket.io').listen(app, { log: false });
 
 server.listen(process.env.PORT || 5000)
 
@@ -12,6 +13,13 @@ server.listen(process.env.PORT || 5000)
 app.get('/', function (req, res) {
 	res.sendfile(__dirname + '/index.html');
 });
+
+// app.configure(function(){
+// 	app.use(express.static(__dirname + '/public'));
+// });
+
+app.use(express.static(__dirname + '/public'));
+
 
 
 var T = new Twit({
@@ -48,7 +56,8 @@ io.sockets.on('connection', function (socket) {
 
 function cleanString(string){
 	var returnArray = [];
-	var regex = XRegExp("[^\\s\\p{Latin}]+", "g");
+	// var regex = XRegExp("[^\\s\\p{Latin}]+", "g");
+	var regex = XRegExp("[^\\s\\p{N}\\p{L}-]+", "g");
 	var string = XRegExp.replace(string, regex, "").toLowerCase().split( /[\s\n\r]+/g );
 
 	for(var i = 0; i < string.length; i++){ 

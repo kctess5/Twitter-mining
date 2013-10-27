@@ -3,17 +3,24 @@
 <head>
 <script src="/socket.io/socket.io.js"></script>
 <script src="http://xregexp.com/xregexp-all.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.js"></script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.js"></script> -->
 <script src="http://maps.google.com/maps/api/js?sensor=false&libraries=places" type="text/javascript"></script>
 <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/maplabel/src/maplabel-compiled.js"></script>
 <script src="http://plus.martinmatysiak.de/daynightoverlay/src/daynightoverlay.js"></script>
+<script src="./jquery-1.6.1.min.js"></script>
+<!-- jquery-1.6.1.min -->
 
 
 
 <style>
 
 	html { height: 100% }
-	body { height: 100%; margin: 0px; padding: 0px }
+	body { height: 100%; margin: 0px; padding: 0px;
+		-webkit-transition:font-size 2000ms;
+		-moz-transition:font-size 2000ms;
+		-o-transition:font-size 2000ms;
+		transition:font-size 2000ms; 
+	}
 	#container { width: 100%; height: 100% }
 	#nav { z-index: 100; position: absolute; margin: 10px 0px 0px 200px; background-color: #fff; border: 1px #000 Solid; padding: 5px; }
 	#map { width: 100%; height: 100% }
@@ -36,7 +43,7 @@
 function initialize() {
 
 	var counter = 0;
-	var iterations = 50;
+	var iterations = 30;
 	window.marker = [];
 	window.tweets = [];
 	window.words = [];
@@ -62,7 +69,7 @@ function initialize() {
 		mapTypeControlOptions: {
 			mapTypeIds: [ 'Styled']
 		},
-		center: new google.maps.LatLng(20,0),
+		center: new google.maps.LatLng(30,0),
 		zoom: 2,
 		mapTypeId: 'Styled'
 	};
@@ -78,7 +85,7 @@ function initialize() {
 	    fillColor: 'rgba(0,0,0,0.2)'
 	});
 
-	var myLatlng = new google.maps.LatLng(27,0);
+	var myLatlng = new google.maps.LatLng(37,0);
 	if (window.mapLabel) {
 		mapLabel.set('text', modeWord);
 		mapLabel.set('position', myLatlng);
@@ -87,7 +94,6 @@ function initialize() {
 		window.mapLabel.set('position', myLatlng);
 	}
 
-	// google.maps.event.addListener(map, 'bounds_changed', function() {var bounds = window.map.getBounds();socket.emit('viewresize', { lat: {min:bounds.fa.b,max:bounds.fa.d}, lon: {min:bounds.ba.d,max:bounds.ba.b}  });});
 
 	///////////////////////////////////////////////////////////
 
@@ -121,28 +127,38 @@ function initialize() {
 			//if marker already was created change positon
 				window.words[wordCounter%displayWords].set('text', window.modeWord);
 				window.words[wordCounter%displayWords].set('position', myLatlng);
+				window.words[wordCounter%displayWords].set('fontSize', 30);
+				shrinkText( window.words[wordCounter%displayWords] );
+
+				// setTimeout(function(){ 
+				//     shrinkText( window.words[wordCounter%displayWords] ); 
+				//     console.log("shrinking");
+				// }, 50);
+
 			} else {
 				window.words[wordCounter%displayWords] = new MapLabel({
 					text: window.modeWord,
 					position: myLatlng,
 					map: map,
-					fontSize: 20,
+					fontSize: 40,
 					fontFamily: "Helvetica",
 					strokeWeight:0,
 					fontColor:'ffffff',
 					align: 'center'
 				});
 				window.words[wordCounter%displayWords].set('position', myLatlng);
+				shrinkText( window.words[wordCounter%displayWords] );
+
+				// setTimeout(function(){ 
+				//     shrinkText( window.words[wordCounter%displayWords] ); 
+				//     console.log("shrinking");
+				// }, 50);
 			}
 
-
-			for(var i = 0; i < window.words.length; i++){
-				window.words[(wordCounter-i)%displayWords].set('fontSize', (displayWords - i)*2);
-			}
-
-
-
-
+			// for(var i = 0; i < window.words.length; i++){
+				// window.words[(wordCounter-i)%displayWords].set('fontSize', (displayWords - i)*2);
+				// console.log(window.words[(wordCounter-i)%displayWords].fontSize);
+			// }
 
 			wordCounter += 1;
 		}
@@ -175,19 +191,19 @@ function initialize() {
           
 	///.................. Initalize Markers ..................///
 
-		// myLatlng = new google.maps.LatLng(tweet.coordinates[1],tweet.coordinates[0]);
+	// 	myLatlng = new google.maps.LatLng(tweet.coordinates[1],tweet.coordinates[0]);
 
-		// if (window.marker[counter%iterations]) {
-		// //if marker already was created change positon
-		// 	window.marker[counter%iterations].setPosition(myLatlng);
-		// } else {
-		// 	//create a marker
-		// 	window.marker[counter%iterations] = new google.maps.Marker({
-		// 		position: myLatlng
-		// 	});
+	// 	if (window.marker[counter%iterations]) {
+	// 	//if marker already was created change positon
+	// 		window.marker[counter%iterations].setPosition(myLatlng);
+	// 	} else {
+	// 		//create a marker
+	// 		window.marker[counter%iterations] = new google.maps.Marker({
+	// 			position: myLatlng
+	// 		});
 
-		// 	window.marker[counter%iterations].setMap(map);
-		// }
+	// 		window.marker[counter%iterations].setMap(map);
+	// 	}
 		counter += 1;
 	});
 
@@ -243,6 +259,18 @@ function initialize() {
 		newLabel.set('position', myLatlng);
 		
 	}
+
+	function shrinkText(object){
+		// window.words[wordCounter%displayWords]
+		
+		object.set('fontSize', object.fontSize - 1);
+		if (object.fontSize > 0) {
+			setTimeout(function(){ 
+			    shrinkText(object);
+			    // console.log("shrinking");
+			}, 30);
+		}
+	} 
 
 };
 
