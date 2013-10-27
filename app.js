@@ -9,14 +9,16 @@ var express = require('express')
 
 server.listen(process.env.PORT || 5000) 
 
-// routing
-app.get('/', function (req, res) {
-	res.sendfile(__dirname + '/public/index.html');
-});
+
 
 
 process.env.PWD = process.cwd();
 app.use(express.static(process.env.PWD + '/public'));
+
+// routing
+app.get('/', function (req, res) {
+	res.sendfile(process.env.PWD + '/public/index.html');
+});
 
 // app.use(express.static(__dirname + '/public')); //DOESN'T work with Heroku
 
