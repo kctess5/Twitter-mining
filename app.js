@@ -14,18 +14,11 @@ app.get('/', function (req, res) {
 	res.sendfile(__dirname + '/index.html');
 });
 
-// app.configure(function(){
-// 	app.use(express.static(__dirname + '/public'));
-// });
+
 process.env.PWD = process.cwd();
 app.use(express.static(process.env.PWD + '/public'));
 
-// app.use(express.static(__dirname + '/public'));
-
-// app.use('/heatcanvas',express.static(__dirname+'/heatcanvas'));
-// process.env.PWD = process.cwd()
-// app.use('/heatcanvas',express.static(process.env.PWD+'/heatcanvas'));
-
+// app.use(express.static(__dirname + '/public')); //DOESN'T work with Heroku
 
 
 var T = new Twit({
@@ -62,8 +55,8 @@ io.sockets.on('connection', function (socket) {
 
 function cleanString(string){
 	var returnArray = [];
-	var regex = XRegExp("[^\\s\\p{Latin}]+", "g");
-	// var regex = XRegExp("[^\\s\\p{N}\\p{L}-]+", "g");
+	// var regex = XRegExp("[^\\s\\p{Latin}]+", "g");
+	var regex = XRegExp("[^\\s\\p{N}\\p{L}-]+", "g");
 	var string = XRegExp.replace(string, regex, "").toLowerCase().split( /[\s\n\r]+/g );
 
 	for(var i = 0; i < string.length; i++){ 
