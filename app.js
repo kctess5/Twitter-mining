@@ -17,8 +17,14 @@ app.get('/', function (req, res) {
 // app.configure(function(){
 // 	app.use(express.static(__dirname + '/public'));
 // });
+process.env.PWD = process.cwd();
+app.use(express.static(process.env.PWD + '/public'));
 
 // app.use(express.static(__dirname + '/public'));
+
+// app.use('/heatcanvas',express.static(__dirname+'/heatcanvas'));
+// process.env.PWD = process.cwd()
+// app.use('/heatcanvas',express.static(process.env.PWD+'/heatcanvas'));
 
 
 
