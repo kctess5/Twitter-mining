@@ -9,9 +9,6 @@ var express = require('express')
 
 server.listen(process.env.PORT || 5000);
 
-
-
-
 process.env.PWD = process.cwd();
 app.use(express.static(process.env.PWD + '/public'));
 
