@@ -8,7 +8,7 @@ function initialize() {
 	var wordCounter = 0;
 	var displayWords = 20;
 
-	var socket = io.connect();
+	var socket = io.connect(); 
 
 	///................... Initalize Map ...................///
 
