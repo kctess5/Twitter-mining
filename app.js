@@ -1,18 +1,16 @@
 var express = require('express')
 	, app = express()
 	, http = require('http')
-	, server = http.createServer(app);
-
+	, server = http.createServer(app)
+	, XRegExp = require('xregexp').XRegExp
+	, Twit = require('twit')
+	, io = require('socket.io').listen(server);
 	// require('socket.io').listen(app, { log: false });
 
 server.listen(process.env.PORT || 5000);
 
 process.env.PWD = process.cwd();
 app.use(express.static(process.env.PWD + '/public'));
-
-var XRegExp = require('xregexp').XRegExp
-	, Twit = require('twit')
-	, io = require('socket.io').listen(server);
 
 // routing
 app.get('/', function (req, res) {
