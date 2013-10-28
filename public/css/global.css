@@ -8,6 +8,62 @@
 	font-style: normal; 
 }*/
 
+@font-face {
+  font-family: 'quicksandbold';
+  src: url("fonts/quicksand_bold-webfont.eot");
+  src: url("fonts/quicksand_bold-webfont.eot?#iefix") format("embedded-opentype"), url("fonts/quicksand_bold-webfont.woff") format("woff"), url("fonts/quicksand_bold-webfont.ttf") format("truetype"), url("fonts/quicksand_bold-webfont.svg#quicksandbold") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'quicksandbold_oblique';
+  src: url("fonts/quicksand_bold_oblique-webfont.eot");
+  src: url("fonts/quicksand_bold_oblique-webfont.eot?#iefix") format("embedded-opentype"), url("fonts/quicksand_bold_oblique-webfont.woff") format("woff"), url("fonts/quicksand_bold_oblique-webfont.ttf") format("truetype"), url("fonts/quicksand_bold_oblique-webfont.svg#quicksandbold_oblique") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'quicksandbook_oblique';
+  src: url("fonts/quicksand_book_oblique-webfont.eot");
+  src: url("fonts/quicksand_book_oblique-webfont.eot?#iefix") format("embedded-opentype"), url("fonts/quicksand_book_oblique-webfont.woff") format("woff"), url("fonts/quicksand_book_oblique-webfont.ttf") format("truetype"), url("fonts/quicksand_book_oblique-webfont.svg#quicksandbook_oblique") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'quicksandbook';
+  src: url("fonts/quicksand_book-webfont.eot");
+  src: url("fonts/quicksand_book-webfont.eot?#iefix") format("embedded-opentype"), url("fonts/quicksand_book-webfont.woff") format("woff"), url("fonts/quicksand_book-webfont.ttf") format("truetype"), url("fonts/quicksand_book-webfont.svg#quicksandbook") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'quicksanddash';
+  src: url("fonts/quicksand_dash-webfont.eot");
+  src: url("fonts/quicksand_dash-webfont.eot?#iefix") format("embedded-opentype"), url("fonts/quicksand_dash-webfont.woff") format("woff"), url("fonts/quicksand_dash-webfont.ttf") format("truetype"), url("fonts/quicksand_dash-webfont.svg#quicksanddash") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'quicksandlight_oblique';
+  src: url("fonts/quicksand_light_oblique-webfont.eot");
+  src: url("fonts/quicksand_light_oblique-webfont.eot?#iefix") format("embedded-opentype"), url("fonts/quicksand_light_oblique-webfont.woff") format("woff"), url("fonts/quicksand_light_oblique-webfont.ttf") format("truetype"), url("fonts/quicksand_light_oblique-webfont.svg#quicksandlight_oblique") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'quicksandlight';
+  src: url("fonts/quicksand_light-webfont.eot");
+  src: url("fonts/quicksand_light-webfont.eot?#iefix") format("embedded-opentype"), url("fonts/quicksand_light-webfont.woff") format("woff"), url("fonts/quicksand_light-webfont.ttf") format("truetype"), url("fonts/quicksand_light-webfont.svg#quicksandlight") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
 html { 
 	height: 100% 
 }
@@ -27,3 +83,155 @@ body {
 #map { 
 	width: 100%; height: 100% 
 }
+
+.header {
+  opacity: 0;
+}
+
+.header, .blog-header {
+  position: relative;
+  top: 0px;
+  width: 100%;
+  height: 2.5em;
+  background-color: #252422;
+  z-index: 100;
+}
+.header h1, .header h2, .header h3, .header h4, .header h5, .header h6, .header a, .header p, .header b, .header img, .blog-header h1, .blog-header h2, .blog-header h3, .blog-header h4, .blog-header h5, .blog-header h6, .blog-header a, .blog-header p, .blog-header b, .blog-header img {
+  color: #f5ebe5;
+  font-family: 'quicksandbook';
+  -webkit-transition: all 0.1s ease-in-out;
+  -moz-transition: all 0.1s ease-in-out;
+  -o-transition: all 0.1s ease-in-out;
+  -ms-transition: all 0.1s ease-in-out;
+  transition: all 0.1s ease-in-out;
+}
+.header #blog-button, .header #title-button, .header #logo, .blog-header #blog-button, .blog-header #title-button, .blog-header #logo {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  float: left;
+  bottom: 0px;
+  display: inline-block;
+}
+.header #logo, .blog-header #logo {
+  margin-left: 25px;
+  margin-top: 6px;
+}
+.header #blog-button, .blog-header #blog-button {
+  margin-left: 20px;
+  margin-top: 10px;
+  opacity: .7;
+  color: #f5ebe5;
+}
+.header #title-button, .blog-header #title-button {
+  margin-left: 20px;
+  margin-top: 9px;
+  font-weight: 900;
+  color: #e05a50;
+}
+.header .right-button, .blog-header .right-button {
+  margin-top: 10px;
+  margin-right: 13px;
+  padding: 0;
+  position: relative;
+  float: right;
+  bottom: 0px;
+  display: inline-block;
+  font-weight: 500;
+}
+.header .right-button:hover, .header .right-button.active, .header #title-button:hover, .header #blog-button:hover, .blog-header .right-button:hover, .blog-header .right-button.active, .blog-header #title-button:hover, .blog-header #blog-button:hover {
+  color: transparent;
+  -webkit-transition: all 0.1s ease-in-out;
+  -moz-transition: all 0.1s ease-in-out;
+  -o-transition: all 0.1s ease-in-out;
+  -ms-transition: all 0.1s ease-in-out;
+  transition: all 0.1s ease-in-out;
+}
+.header .right-button:hover, .blog-header .right-button:hover {
+  text-shadow: 0px 0px 2px #60ef8f;
+}
+.header #title-button:hover, .blog-header #title-button:hover {
+  text-shadow: 0px 0px 2px #e05a50;
+}
+.header #blog-button:hover, .blog-header #blog-button:hover {
+  text-shadow: 0px 0px 2px #f5ebe5;
+}
+.header .right-button.active, .blog-header .right-button.active {
+  text-shadow: 0px 0px 2px #28bdf4;
+}
+
+.header.show-for-small, .blog-header.show-for-small {
+  top: 0px;
+  width: 100%;
+  height: 2.5em;
+}
+.header.show-for-small .right-button, .blog-header.show-for-small .right-button {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  float: right;
+  bottom: 0px;
+  display: inline-block;
+  font-weight: 500;
+}
+.header.show-for-small h4, .blog-header.show-for-small h4 {
+  margin-top: 7px !important;
+  margin-right: 7px !important;
+  font-size: 1.2em;
+  letter-spacing: -1.5px !important;
+}
+
+.header.active {
+  opacity: .9;
+  -webkit-transition: all 0.6s ease-in-out;
+  -moz-transition: all 0.6s ease-in-out;
+  -o-transition: all 0.6s ease-in-out;
+  -ms-transition: all 0.6s ease-in-out;
+  transition: all 0.6s ease-in-out;
+  /*background-color: #373633;*/
+}
+
+input, textarea {
+  /*width: 100%;*/
+  /*height: 100%;*/
+  margin-top: 7px;
+  margin-left: 20px;
+  border: 0;
+  outline: none;
+  background-color: #373633;
+  color: #f5ebe5;
+  padding: 5px;
+  padding-top: 2px;
+  font-size: 1em;
+  float: right;
+  resize: none;
+}
+
+p {
+	float: right;
+	top: 0px;
+	padding: 0;
+	margin: 0;
+	margin-left: 10px;
+	position: relative;
+	display: inline-block;
+	font-size: 1em;
+	margin-top: 10px;
+	margin-left: 20px;
+	color: #f5ebe5;
+
+}
+/*textarea {
+  resize: none;
+  padding-top: 4px;
+}*/
+
+#submitbutton {
+	margin-top: 7px;
+	padding: 3px;
+	background-color: #286ebe;
+	cursor: pointer;
+}
+
+
+

@@ -1,14 +1,35 @@
 function initialize() {
 
 	var counter = 0;
-	var iterations = 30;
+	var iterations = $("#tweetnumber").val();
+	var markers = $("#markernumber").val();
 	window.marker = [];
 	window.tweets = [];
 	window.words = [];
 	var wordCounter = 0;
-	var displayWords = 20;
+	var displayWords = $("#wordnumber").val();
+	// console.log($("#tweetnumber").val());
 
 	var socket = io.connect(); 
+
+	// $( "#tweetnumber" ).change(function() {
+	// 	iterations = $("#tweetnumber").val();
+	// });
+	// $( "#markernumber" ).change(function() {
+	// 	markers = $("#markernumber").val();
+	// });
+
+	$("#submitbutton").click(function() {
+		for(var i = 0; i < window.marker.length; i++){
+			window.marker[i].setMap(null);
+		}
+		for(var i = 0; i < window.words.length; i++){
+			window.words[i].set('map', null);
+		}
+		markers = $("#markernumber").val();
+		iterations = $("#tweetnumber").val();
+		displayWords = $("#wordnumber").val();
+	});
 
 	///................... Initalize Map ...................///
 
@@ -73,45 +94,41 @@ function initialize() {
 		// console.log(window.modeWord);
 		var averageCoordinate = averageCoordinates(window.tweets);
 
+
 		if (mode(wordArray) != window.modeWord){
 			window.mapLabel.setMap(null);
-			window.modeWord = mode(wordArray);
+			if (displayWords != 0) {
+				window.modeWord = mode(wordArray);
 
-			var x = window.tweets[counter%iterations].coordinates[0]
-			var y = window.tweets[counter%iterations].coordinates[1]
-			myLatlng = new google.maps.LatLng(y,x);
+				var x = window.tweets[counter%iterations].coordinates[0]
+				var y = window.tweets[counter%iterations].coordinates[1]
+				myLatlng = new google.maps.LatLng(y,x);
 
-			if (window.words[wordCounter%displayWords]) {
-			//if marker already was created change positon
-				window.words[wordCounter%displayWords].set('text', window.modeWord);
-				window.words[wordCounter%displayWords].set('position', myLatlng);
-				window.words[wordCounter%displayWords].set('fontSize', 40);
-				shrinkText( window.words[wordCounter%displayWords] );
+				if (window.words[wordCounter%displayWords]) {
+				//if marker already was created change positon
+					window.words[wordCounter%displayWords].set('text', window.modeWord);
+					window.words[wordCounter%displayWords].set('position', myLatlng);
+					window.words[wordCounter%displayWords].set('fontSize', 40);
+					window.words[wordCounter%displayWords].set('map', map);
+					shrinkText( window.words[wordCounter%displayWords] );
 
-				// setTimeout(function(){ 
-				//     shrinkText( window.words[wordCounter%displayWords] ); 
-				//     console.log("shrinking");
-				// }, 50);
-
-			} else {
-				window.words[wordCounter%displayWords] = new MapLabel({
-					text: window.modeWord,
-					position: myLatlng,
-					map: map,
-					fontSize: 40,
-					fontFamily: "Helvetica",
-					strokeWeight:0,
-					fontColor:'ffffff',
-					align: 'center'
-				});
-				window.words[wordCounter%displayWords].set('position', myLatlng);
-				shrinkText( window.words[wordCounter%displayWords] );
-
-				// setTimeout(function(){ 
-				//     shrinkText( window.words[wordCounter%displayWords] ); 
-				//     console.log("shrinking");
-				// }, 50);
+				} else {
+					window.words[wordCounter%displayWords] = new MapLabel({
+						text: window.modeWord,
+						position: myLatlng,
+						map: map,
+						fontSize: 40,
+						fontFamily: "Helvetica",
+						strokeWeight:0,
+						fontColor:'ffffff',
+						align: 'center'
+					});
+					window.words[wordCounter%displayWords].set('position', myLatlng);
+					window.words[wordCounter%displayWords].set('map', map);
+					shrinkText( window.words[wordCounter%displayWords] );
+				}
 			}
+			
 
 			// for(var i = 0; i < window.words.length; i++){
 				// window.words[(wordCounter-i)%displayWords].set('fontSize', (displayWords - i)*2);
@@ -124,46 +141,28 @@ function initialize() {
 		// makeNewLabel(averageCoordinate.x, averageCoordinate.y, "test", 20)
 		// console.log(averageCoordinates(window.tweets))
 		// console.log(wordArray);
-          
-
-    	///................ Initalize Common Words ................///
-
-	// var myLatlng = new google.maps.LatLng(averageCoordinate.y,averageCoordinate.x);
-	// if (window.mapLabel) {
-	// 	mapLabel.set('text', window.modeWord);
-	// 	mapLabel.set('position', myLatlng);
-	// } else {
-	// 	window.mapLabel = new MapLabel({
-	// 		text: window.modeWord,
-	// 		position: myLatlng,
-	// 		map: map,
-	// 		fontSize: 30,
-	// 		fontFamily: "Helvetica",
-	// 		strokeWeight:0,
-	// 		fontColor:'ffffff',
-	// 		align: 'center'
-	// 	});
-
-	// 	window.mapLabel.set('position', myLatlng);
-	// }
+         
 
 
 	///.................. Initalize Markers ..................///
+		if (markers > 0){
+			myLatlng = new google.maps.LatLng(tweet.coordinates[1],tweet.coordinates[0]);
 
-		// myLatlng = new google.maps.LatLng(tweet.coordinates[1],tweet.coordinates[0]);
+			if (window.marker[counter%markers]) {
+			//if marker already was created change positon
+				window.marker[counter%markers].setPosition(myLatlng);
+				window.marker[counter%markers].setMap(map);
+			} else {
+				//create a marker
+				window.marker[counter%markers] = new google.maps.Marker({
+					position: myLatlng
+				});
 
-		// if (window.marker[counter%iterations]) {
-		// //if marker already was created change positon
-		// 	window.marker[counter%iterations].setPosition(myLatlng);
-		// } else {
-		// 	//create a marker
-		// 	window.marker[counter%iterations] = new google.maps.Marker({
-		// 		position: myLatlng
-		// 	});
+				window.marker[counter%markers].setMap(map);
+			}
 
-		// 	window.marker[counter%iterations].setMap(map);
-		// }
-
+		}
+	
 
 		counter += 1;
 	});
