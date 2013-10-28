@@ -1,5 +1,6 @@
 function initialize() {
 
+	var socket = io.connect(); 
 	var counter = 0;
 	var iterations = $("#tweetnumber").val();
 	var markers = $("#markernumber").val();
@@ -8,16 +9,7 @@ function initialize() {
 	window.words = [];
 	var wordCounter = 0;
 	var displayWords = $("#wordnumber").val();
-	// console.log($("#tweetnumber").val());
-
-	var socket = io.connect(); 
-
-	// $( "#tweetnumber" ).change(function() {
-	// 	iterations = $("#tweetnumber").val();
-	// });
-	// $( "#markernumber" ).change(function() {
-	// 	markers = $("#markernumber").val();
-	// });
+	
 
 	$("#submitbutton").click(function() {
 		for(var i = 0; i < window.marker.length; i++){
