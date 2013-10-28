@@ -6,7 +6,7 @@ function initialize() {
 	var markers = $("#markernumber").val();
 	window.marker = [];
 	window.tweets = [];
-	window.words = [];
+	window.words = []; 
 	var wordCounter = 0;
 	var displayWords = $("#wordnumber").val();
 	
